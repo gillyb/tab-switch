@@ -1,0 +1,17 @@
+{
+  "manifest_version": 2,
+  "name": "Tab Switch",
+  "version": "1",
+  "description": "A better tab switcher for chrome",
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["tab-switch.js"],
+    "css": ["main.css"]
+  }],
+  "author": "Gilly Barr",
+  "background": {
+    "scripts": ["bg.js"]
+  },
+  "short_name": "Tab Switch",
+  "permissions": ["tabs", "background"]
+}
