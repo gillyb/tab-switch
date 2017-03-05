@@ -12,7 +12,7 @@ chrome.tabs.onUpdated.addListener(fillTabsList);
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 	// change active tab
 	if (request.goToTab) {
-		chrome.tabs.update({ active:false });
+		chrome.tabs.update({ active: false });
 		chrome.tabs.update(tabsList[request.goToTab].id, { active: true });
 		return;
 	}

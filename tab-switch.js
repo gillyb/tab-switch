@@ -7,6 +7,7 @@ var keysMap = {
 	ENTER: 13,
 	ESC: 27
 };
+
 var tabSelectionWindow = {
 	isOpen: false,
 	currentSelectedTab: 0,
@@ -22,7 +23,7 @@ var tabSelectionWindow = {
 		this.currentSelectedTab = x;
 
 		var selectedTab = document.querySelector('.tabs-container .tab-entry.selected');
-		selectedTab.className = selectedTab.className.replace('selected', '');
+		selectedTab.className = selectedTab.className.replace('selected', '').trim();
 
 		var tabOptions = document.querySelectorAll('.tabs-container .tab-entry');
 		tabOptions[this.currentSelectedTab].className += ' selected';
@@ -70,7 +71,12 @@ document.onkeydown = function(event) {
 			var modalLeft = (viewportWidth / 2) - (modalWidth / 2);
 			var modalMaxHeight = viewportHeight - 60;
 
-			var modalWrapper = createDiv('tabs-container', 'left:'+modalLeft+'px; max-height:'+modalMaxHeight+'px;');
+            var backdrop = createDiv('tab-switch backdrop', 'position:fixed; top:0; bottom:0; left:0; right:0; height:100%; width:100%; background-color:#000; opacity:0.4');
+			var modalWrapper = createDiv('tab-switch tabs-container', 'left:'+modalLeft+'px; max-height:'+modalMaxHeight+'px;');
+
+            backdrop.onclick = function() {
+                closeTabSelection();
+            };
 
 			// create tabs
 			for (var i=0; i<tabs.length; i++) {
@@ -106,7 +112,9 @@ document.onkeydown = function(event) {
 				modalWrapper.appendChild(tabSelection);
 			}
 
-			document.body.appendChild(modalWrapper);
+			document.body.appendChild(backdrop);
+            document.body.appendChild(modalWrapper);
+            document.body.style.overflow = 'hidden';
 			tabSelectionWindow.isOpen = true;
 		});
 	}
@@ -121,7 +129,9 @@ var createDiv = function(className, style) {
 };
 
 var closeTabSelection = function() {
-	document.querySelector('.tabs-container').remove();
+	document.querySelector('.tab-switch.tabs-container').remove();
+    document.querySelector('.tab-switch.backdrop').remove();
+    document.body.style.overflow = 'auto';
 	tabSelectionWindow.isOpen = false;
 };
 
