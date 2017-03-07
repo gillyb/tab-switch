@@ -1,13 +1,3 @@
-var keysMap = {
-	Q: 81,
-	UP: 38,
-	DOWN: 40,
-	RIGHT: 39,
-	LEFT: 37,
-	ENTER: 13,
-	ESC: 27
-};
-
 var tabSelectionWindow = {
 	isOpen: false,
 	currentSelectedTab: 0,
@@ -41,19 +31,19 @@ var tabSelectionWindow = {
 
 document.onkeydown = function(event) {
 	if (tabSelectionWindow.isOpen) {
-		if (event.keyCode == keysMap.ESC) {
+		if (event.keyCode == TabSwitch.keysMap.ESC) {
 			closeTabSelection();
 			event.preventDefault();
 		}
-		else if (event.keyCode == keysMap.ENTER) {
+		else if (event.keyCode == TabSwitch.keysMap.ENTER) {
 			selectTab(tabSelectionWindow.selectedTab);
 			event.preventDefault();
 		}
-		else if (event.keyCode == keysMap.DOWN || event.keyCode == keysMap.Q) {
+		else if (event.keyCode == TabSwitch.keysMap.DOWN || event.keyCode == TabSwitch.keysMap.Q) {
 			tabSelectionWindow.selectedTab = tabSelectionWindow.selectedTab + 1;
 			event.preventDefault();
 		}
-		else if (event.keyCode == keysMap.UP) {
+		else if (event.keyCode == TabSwitch.keysMap.UP) {
 			tabSelectionWindow.selectedTab = tabSelectionWindow.selectedTab - 1;
 			event.preventDefault();
 		}
@@ -71,8 +61,13 @@ document.onkeydown = function(event) {
 			var modalLeft = (viewportWidth / 2) - (modalWidth / 2);
 			var modalMaxHeight = viewportHeight - 60;
 
-            var backdrop = createDiv('tab-switch backdrop', 'position:fixed; top:0; bottom:0; left:0; right:0; height:100%; width:100%; background-color:#000; opacity:0.4');
-			var modalWrapper = createDiv('tab-switch tabs-container', 'left:'+modalLeft+'px; max-height:'+modalMaxHeight+'px;');
+            var userFilterHeight = 32 + 12;
+            var backdrop = createDiv('tab-switch backdrop');
+            var tabSwitchWrapper = createDiv('tab-switch main-wrapper', 'left:'+modalLeft+'px; max-height:'+modalMaxHeight+'px;')
+			var tabsContainerWrapper = createDiv('tab-switch tabs-container', 'max-height:' + (modalMaxHeight - userFilterHeight) + 'px;');
+
+            tabSwitchWrapper.appendChild(createUserFilter());
+            tabSwitchWrapper.appendChild(tabsContainerWrapper);
 
             backdrop.onclick = function() {
                 closeTabSelection();
@@ -109,11 +104,11 @@ document.onkeydown = function(event) {
 					}, false);
 				})(i)
 
-				modalWrapper.appendChild(tabSelection);
+				tabsContainerWrapper.appendChild(tabSelection);
 			}
 
 			document.body.appendChild(backdrop);
-            document.body.appendChild(modalWrapper);
+            document.body.appendChild(tabSwitchWrapper);
             document.body.style.overflow = 'hidden';
 			tabSelectionWindow.isOpen = true;
 		});
@@ -128,8 +123,19 @@ var createDiv = function(className, style) {
 	return d;
 };
 
+var createUserFilter = function() {
+    var userFilter = createDiv('user-filter');
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.addEventListener('change', function(event) {
+
+    }, false);
+    userFilter.appendChild(input);
+    return userFilter;
+};
+
 var closeTabSelection = function() {
-	document.querySelector('.tab-switch.tabs-container').remove();
+	document.querySelector('.tab-switch.main-wrapper').remove();
     document.querySelector('.tab-switch.backdrop').remove();
     document.body.style.overflow = 'auto';
 	tabSelectionWindow.isOpen = false;

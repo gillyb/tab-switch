@@ -1,11 +1,14 @@
 {
   "manifest_version": 2,
   "name": "Tab Switch",
-  "version": "1",
+  "version": "1.2",
   "description": "A better tab switcher for chrome",
   "content_scripts": [{
     "matches": ["<all_urls>"],
-    "js": ["tab-switch.js"],
+    "js": [
+        "keymap.js",
+        "tab-switch.js"
+    ],
     "css": ["main.css"]
   }],
   "author": "Gilly Barr",
